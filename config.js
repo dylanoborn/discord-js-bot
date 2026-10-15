@@ -1,62 +1,66 @@
+
 module.exports = {
-  OWNER_IDS: [""], // Bot owner ID's
-  SUPPORT_SERVER: "", // Your bot support server
+  OWNER_IDS: [""],
+  SUPPORT_SERVER: "",
+
   PREFIX_COMMANDS: {
-    ENABLED: true, // Enable/Disable prefix commands
-    DEFAULT_PREFIX: "!", // Default prefix for the bot
+    ENABLED: true,
+    DEFAULT_PREFIX: ".",
   },
+
   INTERACTIONS: {
-    SLASH: false, // Should the interactions be enabled
-    CONTEXT: false, // Should contexts be enabled
-    GLOBAL: false, // Should the interactions be registered globally
-    TEST_GUILD_ID: "xxxxxxxxxxx", // Guild ID where the interactions should be registered. [** Test you commands here first **]
+    SLASH: false,
+    CONTEXT: false,
+    GLOBAL: false,
+    TEST_GUILD_ID: "xxxxxxxxxxx",
   },
+
   EMBED_COLORS: {
-    BOT_EMBED: "#068ADD",
+    BOT_EMBED: "#5865F2",
+    INFO: "#5865F2",
     TRANSPARENT: "#36393F",
-    SUCCESS: "#00A56A",
-    ERROR: "#D61A3C",
-    WARNING: "#F7E919",
+    SUCCESS: "#2ECC71",
+    ERROR: "#ED4245",
+    WARNING: "#F1C40F",
+    GAMBLING: "#E67E22",
   },
+
   CACHE_SIZE: {
     GUILDS: 100,
     USERS: 10000,
     MEMBERS: 10000,
   },
-  MESSAGES: {
-    API_ERROR: "Unexpected Backend Error! Try again later or contact support server",
-  },
 
-  // PLUGINS
+  MESSAGES: {
+    API_ERROR: "An unexpected error occurred. Please try again.",
+  },
 
   AUTOMOD: {
     ENABLED: false,
-    LOG_EMBED: "#36393F",
-    DM_EMBED: "#36393F",
+    LOG_EMBED: "#F1C40F",
+    DM_EMBED: "#F1C40F",
   },
 
   DASHBOARD: {
-    enabled: false, // enable or disable dashboard
-    baseURL: "http://localhost:8080", // base url
-    failureURL: "http://localhost:8080", // failure redirect url
-    port: "8080", // port to run the bot on
+    enabled: false,
+    baseURL: "http://localhost:8080",
+    failureURL: "http://localhost:8080",
+    port: "8080",
   },
 
   ECONOMY: {
     ENABLED: false,
-    CURRENCY: "₪",
-    DAILY_COINS: 100, // coins to be received by daily command
-    MIN_BEG_AMOUNT: 100, // minimum coins to be received when beg command is used
-    MAX_BEG_AMOUNT: 2500, // maximum coins to be received when beg command is used
+    CURRENCY: "🪙",
+    DAILY_COINS: 100,
+    MIN_BEG_AMOUNT: 100,
+    MAX_BEG_AMOUNT: 2500,
   },
 
   MUSIC: {
     ENABLED: false,
-    IDLE_TIME: 60, // Time in seconds before the bot disconnects from an idle voice channel
+    IDLE_TIME: 60,
     MAX_SEARCH_RESULTS: 5,
-    DEFAULT_SOURCE: "SC", // YT = Youtube, YTM = Youtube Music, SC = SoundCloud
-    // Add any number of lavalink nodes here
-    // Refer to https://github.com/freyacodes/Lavalink to host your own lavalink server
+    DEFAULT_SOURCE: "SC",
     LAVALINK_NODES: [
       {
         host: "localhost",
@@ -71,8 +75,8 @@ module.exports = {
   GIVEAWAYS: {
     ENABLED: false,
     REACTION: "🎁",
-    START_EMBED: "#FF468A",
-    END_EMBED: "#FF468A",
+    START_EMBED: "#5865F2",
+    END_EMBED: "#2ECC71",
   },
 
   IMAGE: {
@@ -87,49 +91,48 @@ module.exports = {
   MODERATION: {
     ENABLED: false,
     EMBED_COLORS: {
-      TIMEOUT: "#102027",
-      UNTIMEOUT: "#4B636E",
-      KICK: "#FF7961",
-      SOFTBAN: "#AF4448",
-      BAN: "#D32F2F",
-      UNBAN: "#00C853",
-      VMUTE: "#102027",
-      VUNMUTE: "#4B636E",
-      DEAFEN: "#102027",
-      UNDEAFEN: "#4B636E",
-      DISCONNECT: "RANDOM",
-      MOVE: "RANDOM",
+      TIMEOUT: "#F1C40F",
+      UNTIMEOUT: "#2ECC71",
+      KICK: "#ED4245",
+      SOFTBAN: "#ED4245",
+      BAN: "#ED4245",
+      UNBAN: "#2ECC71",
+      VMUTE: "#F1C40F",
+      VUNMUTE: "#2ECC71",
+      DEAFEN: "#F1C40F",
+      UNDEAFEN: "#2ECC71",
+      DISCONNECT: "#F1C40F",
+      MOVE: "#5865F2",
     },
   },
 
   PRESENCE: {
-    ENABLED: false, // Whether or not the bot should update its status
-    STATUS: "online", // The bot's status [online, idle, dnd, invisible]
-    TYPE: "WATCHING", // Status type for the bot [ CUSTOM | PLAYING | LISTENING | WATCHING | COMPETING ]
-    // Your bot status message (note: in custom status type you won't have "Playing", "Listening", "Competing" prefix)
-    MESSAGE: ["{members} members in {servers} servers"],
+    ENABLED: false,
+    STATUS: "online",
+    TYPE: "WATCHING",
+    MESSAGE: [".help | Ticck"],
   },
 
   STATS: {
     ENABLED: false,
-    XP_COOLDOWN: 5, // Cooldown in seconds between messages
-    DEFAULT_LVL_UP_MSG: "{member:tag}, You just advanced to **Level {level}**",
+    XP_COOLDOWN: 5,
+    DEFAULT_LVL_UP_MSG: "{member:tag}, you reached level {level}!",
   },
 
   SUGGESTIONS: {
-    ENABLED: false, // Should the suggestion system be enabled
+    ENABLED: false,
     EMOJI: {
       UP_VOTE: "⬆️",
       DOWN_VOTE: "⬇️",
     },
-    DEFAULT_EMBED: "#4F545C",
-    APPROVED_EMBED: "#43B581",
-    DENIED_EMBED: "#F04747",
+    DEFAULT_EMBED: "#5865F2",
+    APPROVED_EMBED: "#2ECC71",
+    DENIED_EMBED: "#ED4245",
   },
 
   TICKET: {
     ENABLED: false,
-    CREATE_EMBED: "#068ADD",
-    CLOSE_EMBED: "#068ADD",
+    CREATE_EMBED: "#5865F2",
+    CLOSE_EMBED: "#ED4245",
   },
 };
