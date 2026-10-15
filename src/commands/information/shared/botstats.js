@@ -1,100 +1,181 @@
-const { EmbedBuilder, ActionRowBuilder, ButtonBuilder, ButtonStyle } = require("discord.js");
-const { EMBED_COLORS, SUPPORT_SERVER, DASHBOARD } = require("@root/config");
+
+const {
+  EmbedBuilder,
+  ActionRowBuilder,
+  ButtonBuilder,
+  ButtonStyle
+} = require("discord.js");
+
+const os = require("node:os");
+
+const {
+  EMBED_COLORS,
+  SUPPORT_SERVER,
+  DASHBOARD,
+  PREFIX_COMMANDS,
+  INTERACTIONS
+} = require("@root/config");
+
 const { timeformat } = require("@helpers/Utils");
-const os = require("os");
-const { stripIndent } = require("common-tags");
 
-/**
- * @param {import('@structures/BotClient')} client
- */
 module.exports = (client) => {
-  // STATS
-  const guilds = client.guilds.cache.size;
+
+  const servers = client.guilds.cache.size;
   const channels = client.channels.cache.size;
-  const users = client.guilds.cache.reduce((size, g) => size + g.memberCount, 0);
 
-  // CPU
-  const platform = process.platform.replace(/win32/g, "Windows");
-  const architecture = os.arch();
-  const cores = os.cpus().length;
-  const cpuUsage = `${(process.cpuUsage().user / 1024 / 1024).toFixed(2)} MB`;
+  const members = client.guilds.cache.reduce(
+    (total, guild) => total + guild.memberCount,
+    0
+  );
 
-  // RAM
-  const botUsed = `${(process.memoryUsage().heapUsed / 1024 / 1024).toFixed(2)} MB`;
-  const botAvailable = `${(os.totalmem() / 1024 / 1024 / 1024).toFixed(2)} GB`;
-  const botUsage = `${((process.memoryUsage().heapUsed / os.totalmem()) * 100).toFixed(1)}%`;
+  const commands = client.commands || [];
 
-  const overallUsed = `${((os.totalmem() - os.freemem()) / 1024 / 1024 / 1024).toFixed(2)} GB`;
-  const overallAvailable = `${(os.totalmem() / 1024 / 1024 / 1024).toFixed(2)} GB`;
-  const overallUsage = `${Math.floor(((os.totalmem() - os.freemem()) / os.totalmem()) * 100)}%`;
+  const aliases = commands.reduce(
+    (total, cmd) =>
+      total + (cmd.command?.aliases?.length || 0),
+    0
+  );
 
-  let desc = "";
-  desc += `❒ Total guilds: ${guilds}\n`;
-  desc += `❒ Total users: ${users}\n`;
-  desc += `❒ Total channels: ${channels}\n`;
-  desc += `❒ Websocket Ping: ${client.ws.ping} ms\n`;
-  desc += "\n";
+  const slashCommands = INTERACTIONS.SLASH
+    ? client.slashCommands.size
+    : 0;
+
+  const ping = Math.round(client.ws.ping);
+
+  const botRam = (
+    process.memoryUsage().heapUsed / 1024 / 1024
+  ).toFixed(2);
+
+  const totalRam = (
+    os.totalmem() / 1024 / 1024 / 1024
+  ).toFixed(2);
+
+  const usedRam = (
+    (os.totalmem() - os.freemem()) /
+    1024 / 1024 / 1024
+  ).toFixed(2);
+
+  const cpuTime = (
+    process.cpuUsage().user / 1000000
+  ).toFixed(2);
+
+  const uptime = timeformat(process.uptime());
+
+  const prefix = PREFIX_COMMANDS.DEFAULT_PREFIX;
 
   const embed = new EmbedBuilder()
-    .setTitle("Bot Information")
-    .setColor(EMBED_COLORS.BOT_EMBED)
+    .setColor(EMBED_COLORS.INFO)
+    .setTitle("🤖 Ticck — Bot Information")
     .setThumbnail(client.user.displayAvatarURL())
-    .setDescription(desc)
+    .setDescription(
+      "**Welcome to Ticck!**\n\n" +
+      "Your all-in-one Discord bot for moderation, " +
+      "economy, music, games, tickets and more.\n\n" +
+      `**Prefix:** \`${prefix}\`\n` +
+      "**Planned Commands:** 550"
+    )
+
     .addFields(
       {
-        name: "CPU",
-        value: stripIndent`
-        ❯ **OS:** ${platform} [${architecture}]
-        ❯ **Cores:** ${cores}
-        ❯ **Usage:** ${cpuUsage}
-        `,
-        inline: true,
+        name: "📊 Bot Statistics",
+        value:
+          `**Servers:** ${servers}\n` +
+          `**Members:** ${members.toLocaleString()}\n` +
+          `**Channels:** ${channels}\n` +
+          `**Ping:** ${ping}ms`,
+        inline: true
       },
       {
-        name: "Bot's RAM",
-        value: stripIndent`
-        ❯ **Used:** ${botUsed}
-        ❯ **Available:** ${botAvailable}
-        ❯ **Usage:** ${botUsage}
-        `,
-        inline: true,
+        name: "📚 Command Statistics",
+        value:
+          `**Loaded Commands:** ${commands.length}\n` +
+          `**Slash Commands:** ${slashCommands}\n` +
+          `**Aliases:** ${aliases}\n` +
+          `**Help Pages:** 13`,
+        inline: true
       },
       {
-        name: "Overall RAM",
-        value: stripIndent`
-        ❯ **Used:** ${overallUsed}
-        ❯ **Available:** ${overallAvailable}
-        ❯ **Usage:** ${overallUsage}
-        `,
-        inline: true,
+        name: "🖥️ System Information",
+        value:
+          `**Operating System:** ${os.platform()}\n` +
+          `**Architecture:** ${os.arch()}\n` +
+          `**CPU Cores:** ${os.cpus().length}\n` +
+          `**CPU User Time:** ${cpuTime}s`,
+        inline: false
       },
       {
-        name: "Node Js version",
-        value: process.versions.node,
-        inline: false,
+        name: "💾 Memory Usage",
+        value:
+          `**Bot Heap RAM:** ${botRam} MB\n` +
+          `**System Used RAM:** ${usedRam} GB\n` +
+          `**System Total RAM:** ${totalRam} GB`,
+        inline: true
       },
       {
-        name: "Uptime",
-        value: "```" + timeformat(process.uptime()) + "```",
-        inline: false,
+        name: "⏰ Uptime",
+        value: `${uptime}`,
+        inline: true
+      },
+      {
+        name: "⚙️ Runtime",
+        value: `Node.js ${process.version}`,
+        inline: false
+      },
+      {
+        name: "📖 Help",
+        value:
+          "Use `.help` to view all 13 help pages.\n" +
+          "Use `.ping` to check Ticck's connection.",
+        inline: false
       }
+    )
+    .setFooter({
+      text: "Ticck • All-in-One Discord Bot"
+    })
+    .setTimestamp();
+
+  // Link buttons
+  const buttons = [];
+
+  buttons.push(
+    new ButtonBuilder()
+      .setLabel("Invite Ticck")
+      .setEmoji("🤖")
+      .setURL(client.getInvite())
+      .setStyle(ButtonStyle.Link)
+  );
+
+  if (
+    SUPPORT_SERVER &&
+    /^https?:\/\//.test(SUPPORT_SERVER)
+  ) {
+    buttons.push(
+      new ButtonBuilder()
+        .setLabel("Support Server")
+        .setEmoji("🎫")
+        .setURL(SUPPORT_SERVER)
+        .setStyle(ButtonStyle.Link)
     );
-
-  // Buttons
-  let components = [];
-  components.push(new ButtonBuilder().setLabel("Invite Link").setURL(client.getInvite()).setStyle(ButtonStyle.Link));
-
-  if (SUPPORT_SERVER) {
-    components.push(new ButtonBuilder().setLabel("Support Server").setURL(SUPPORT_SERVER).setStyle(ButtonStyle.Link));
   }
 
-  if (DASHBOARD.enabled) {
-    components.push(
-      new ButtonBuilder().setLabel("Dashboard Link").setURL(DASHBOARD.baseURL).setStyle(ButtonStyle.Link)
+  if (
+    DASHBOARD.enabled &&
+    /^https?:\/\//.test(DASHBOARD.baseURL)
+  ) {
+    buttons.push(
+      new ButtonBuilder()
+        .setLabel("Dashboard")
+        .setEmoji("⚙️")
+        .setURL(DASHBOARD.baseURL)
+        .setStyle(ButtonStyle.Link)
     );
   }
 
-  let buttonsRow = new ActionRowBuilder().addComponents(components);
+  const row = new ActionRowBuilder()
+    .addComponents(buttons);
 
-  return { embeds: [embed], components: [buttonsRow] };
+  return {
+    embeds: [embed],
+    components: [row]
+  };
 };
